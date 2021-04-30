@@ -3,3 +3,5 @@ class TwitterCredentials():
     API_SECRET='llYoDUUHN6kKGNdxidwHwiMrIeWVWmNI5DPFkx0AYo'
     ACCESS_TOKEN='52416153-4FX5fFVq7NZmftK3JsiPaSqUQup3mrTCPg4euMEfJ'
     ACCESS_TOKEN_SECRET='dzZ1iKXNFF74FiVzEJ0bKQmTU5UeInQoIBbrDDoUekVQf'
+
+dump_location ='/media/aman/8a3ffbda-8a36-45f9-b426-d146a65d9ece/data1/open_source/oxy_need/tweet_dump/'

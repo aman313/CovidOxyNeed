@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 import urllib.parse
 from time import sleep
@@ -6,6 +7,7 @@ from typing import List
 
 import tweepy
 
+from src import constants
 from src.constants import TwitterCredentials
 
 
@@ -25,8 +27,8 @@ class FilterCriterion():
         if self._content_filters and len(self._content_filters):
             content_string = '( '
             for string in self._content_filters:
-                if len(query_string):
-                    content_string+=' OR'+string
+                if len(content_string)>2:
+                    content_string+=' OR '+string
                 else:
                     content_string += string
             content_string +=' )'
@@ -35,8 +37,8 @@ class FilterCriterion():
         if self._hastags and len(self._hastags):
             hashtag_string = '( '
             for hahtag in self._hastags:
-                if len(query_string):
-                    hashtag_string+=' OR'+hahtag
+                if len(hashtag_string)>2:
+                    hashtag_string+=' OR '+hahtag
                 else:
                     hashtag_string +=hahtag
             hashtag_string +=' )'
@@ -49,7 +51,7 @@ class FilterCriterion():
                 else:
                     query_string = unit
 
-
+        print(query_string)
         return urllib.parse.quote_plus(query_string)
 
 class TwitterFeedService(FeedService):
@@ -60,7 +62,7 @@ class TwitterFeedService(FeedService):
 
 
     def get_filters(self)->List[FilterCriterion]:
-        covid_sos_criterion = FilterCriterion(hashtags=['covidSOS'])
+        covid_sos_criterion = FilterCriterion(hashtags=['covidSOS','CovidSOS','covidsos','covidSos'],content_filters=['oxygen'])
         return [covid_sos_criterion]
 
 
@@ -81,6 +83,9 @@ class TwitterFeedService(FeedService):
                     sleep(2)
                     if status.created_at < since:
                         break
+                    with open(constants.dump_location+status._json['id_str'],'w') as o:
+                        json.dump(status._json,o)
+
             except tweepy.TweepError as e:
                 logging.error('Error fetching tweet')
                 continue
