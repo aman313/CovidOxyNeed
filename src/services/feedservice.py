@@ -51,6 +51,7 @@ class FilterCriterion():
                 else:
                     query_string = unit
 
+        query_string = query_string + ' -filter:retweets'
         print(query_string)
         return urllib.parse.quote_plus(query_string)
 
@@ -78,11 +79,14 @@ class TwitterFeedService(FeedService):
                     q=query_string,
                     count=count,
                     result='recent',
+                    tweet_mode='extended',
                     include_entities=True
                 ).items():
                     sleep(2)
                     if status.created_at < since:
                         break
+                    if status._json['full_text'].startswith('RT '):
+                        continue
                     with open(constants.dump_location+status._json['id_str'],'w') as o:
                         json.dump(status._json,o)
 
