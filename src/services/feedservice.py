@@ -11,7 +11,8 @@ from src.constants import TwitterCredentials
 from src.constants import TwitterCredentials, CommonConstants
 from src.models.tweet import Tweet
 from src.utilities import db_connection as db, db_insert_tweet_data
-
+from src.services.CovidRequestService import CovidRequestService
+from src.services.CovidResourceService import CovidResourceService
 
 class FeedService:
     pass
@@ -61,11 +62,10 @@ class FilterCriterion:
 class TwitterFeedService(FeedService):
     tweets = []
 
-    def __init__(self, credentials: TwitterCredentials, connection):
+    def __init__(self, credentials: TwitterCredentials):
         auth = tweepy.OAuthHandler(credentials.API_KEY, credentials.API_SECRET)
         auth.set_access_token(credentials.ACCESS_TOKEN, credentials.ACCESS_TOKEN_SECRET)
         self.api = tweepy.API(auth_handler=auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
-        self.connection = connection
 
     def get_filters(self)->List[FilterCriterion]:
         covid_sos_criterion = FilterCriterion(hashtags=['covidSOS','CovidSOS','covidsos','covidSos'],content_filters=['oxygen'])
@@ -89,23 +89,27 @@ class TwitterFeedService(FeedService):
                     self.process_tweet(status)
                     if status.created_at < since:
                         break
-                    if status._json['full_text'].startswith('RT '):
-                        continue
-                    with open(constants.dump_location+status._json['id_str'],'w') as o:
-                        json.dump(status._json,o)
+                    # if status._json['full_text'].startswith('RT '):
+                    #     continue
+                    # with open(constants.dump_location+status._json['id_str'],'w') as o:
+                    #     json.dump(status._json,o)
 
             except tweepy.TweepError as e:
                 logging.error('Error fetching tweet')
                 continue
 
-        self.insert_tweets()
+        # self.insert_tweets()
 
     def process_tweet(self, status):
         tweet_id = status._json['id_str']
-        tweet_data = status._json['text']
+        tweet_data = status._json['full_text']
+        tweet_time = status._json['created_at']
         tweet_url = CommonConstants.TWEET_URL + tweet_id
-        tweet = Tweet(tweet_data, tweet_url)
-        self.tweets.append(tweet)
+        tweet = Tweet(tweet_data=tweet_data, tweet_url=tweet_url, tweet_time=tweet_time)
+        req_service = CovidRequestService(tweet)
+        req_service.parseTweetToRequest()
+        res_service = CovidResourceService(tweet)
+        res_service.parseTweetToResource()
 
     def insert_tweets(self):
         db_insert_tweet_data.insert_tweet(self.tweets, self.connection)
@@ -116,8 +120,5 @@ class TwitterFeedService(FeedService):
 
 if __name__ == '__main__':
     creds = TwitterCredentials()
-    db_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
-    print(db_path)
-    connection = db.DbConnection().get_connection()
-    feed_service = TwitterFeedService(creds, connection)
+    feed_service = TwitterFeedService(creds)
     feed_service.get_recent_tweets(duration_in_min=1)

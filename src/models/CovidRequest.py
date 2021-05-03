@@ -1,4 +1,4 @@
-from mongoengine import  DynamicDocument, StringField, GeoPointField, DateTimeField
+from mongoengine import DynamicDocument, StringField, GeoPointField, DateTimeField
 
 
 class CovidRequest(DynamicDocument):
@@ -8,3 +8,4 @@ class CovidRequest(DynamicDocument):
     requested_resource_type = StringField()
     request_text = StringField()
     request_time = DateTimeField()
+    request_url = StringField()
