@@ -36,11 +36,12 @@ class CovidResourceService:
                 is_request = True
 
         if is_request:
-            covid_request = CovidResource(request_source=request_source, request_location_name=location_name,
-                                          requested_resource_type=resource_type, request_text=self.tweet.tweet_data,
-                                          request_time=self.tweet.tweet_time, request_url=self.tweet.tweet_url)
-            print(covid_request)
+            covid_resource = CovidResource(request_source=request_source, request_location_name=location_name,
+                                           requested_resource_type=resource_type, request_text=self.tweet.tweet_data,
+                                           request_time=self.tweet.tweet_time, request_url=self.tweet.tweet_url)
+            print(covid_resource)
             # TODO: Insert into collection
+
 
 class TweetStreamCovidResourceService():
     pass
