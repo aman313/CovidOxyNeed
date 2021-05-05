@@ -1,4 +1,5 @@
 import os
+from enum import Enum
 
 
 class TwitterCredentials:
@@ -13,3 +14,14 @@ class CommonConstants:
     TWEET_URL = 'https://twitter.com/twitter/statuses/'
     DB_NAME = 'covid_resource_requests'
 
+
+class ResourceTypes(Enum):
+    OXYGEN = 1
+    BED = 2
+    REMDISIVIR = 3
+    VENTILATOR = 4
+
+class TweetTypes(Enum):
+    COVID_RESOURCE_REQUEST = 1
+    COVID_RESOURCE_SOURCE = 2
+    OTHERS = 3

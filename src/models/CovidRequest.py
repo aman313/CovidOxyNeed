@@ -1,4 +1,4 @@
-from mongoengine import DynamicDocument, StringField, GeoPointField, DateTimeField
+from mongoengine import DynamicDocument, StringField, GeoPointField, DateTimeField, DateField
 
 
 class CovidRequest(DynamicDocument):
