@@ -74,8 +74,8 @@ class TwitterFeedService(FeedService):
 
 
     def get_filters(self)->List[FilterCriterion]:
-        covid_sos_criterion = FilterCriterion(hashtags=['covidSOS','CovidSOS','covidsos','covidSos','covidHelp','CovidHelp','covidhelp'],content_filters=['oxygen','bed','remdisivir'])
-        covid_resource_criterion = FilterCriterion(hashtags=['covidResource','CovidSOS','covidsos','covidSos'],content_filters=['oxygen','bed','remdisivir'])
+        covid_sos_criterion = FilterCriterion(hashtags=['covidSOS','CovidSOS','covidsos','covidSos','covidHelp','CovidHelp','covidhelp'])
+        covid_resource_criterion = FilterCriterion(hashtags=['covidResource','CovidSOS','covidsos','covidSos'])
 
         '''
         covid_sos_criterion = FilterCriterion(
@@ -128,14 +128,14 @@ class TwitterFeedService(FeedService):
         res_service = TweetCovidResourceService()
         parsed_resource = res_service.parseTweetToResource(tweet)
         if parsed_req and  parsed_resource:
-            logging.error('Parsed to both resource and request')
+            logging.error('Parsed to both resource and request ' +tweet.to_json())
             return status,constants.TweetTypes.OTHERS
         elif parsed_resource:
             return parsed_resource,constants.TweetTypes.COVID_RESOURCE_SOURCE
         elif parsed_req:
             return parsed_req,constants.TweetTypes.COVID_RESOURCE_REQUEST
         else:
-            logging.error('Parsed to neither resource and request')
+            logging.error('Parsed to neither resource and request' + tweet.to_json())
             return status,constants.TweetTypes.OTHERS
 
 

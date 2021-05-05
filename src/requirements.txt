@@ -2,3 +2,4 @@ tweepy
 flask
 mongoengine
 spacy
+geograpy3
