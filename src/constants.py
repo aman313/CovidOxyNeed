@@ -13,6 +13,7 @@ dump_location ='/media/aman/8a3ffbda-8a36-45f9-b426-d146a65d9ece/data1/open_sour
 class CommonConstants:
     TWEET_URL = 'https://twitter.com/twitter/statuses/'
     DB_NAME = 'covid_resource_requests'
+    INDIA_DIST_NAMES = '/media/aman/8a3ffbda-8a36-45f9-b426-d146a65d9ece/data1/open_source/oxy_need/allDistrictofIndia.csv'
 
 
 class ResourceTypes(Enum):

@@ -8,6 +8,7 @@ from typing import List
 
 import mongoengine
 import tweepy
+from mongoengine import DateTimeField
 
 from src import constants
 from src.constants import TwitterCredentials
@@ -74,8 +75,8 @@ class TwitterFeedService(FeedService):
 
 
     def get_filters(self)->List[FilterCriterion]:
-        covid_sos_criterion = FilterCriterion(hashtags=['covidSOS','CovidSOS','covidsos','covidSos','covidHelp','CovidHelp','covidhelp'])
-        covid_resource_criterion = FilterCriterion(hashtags=['covidResource','CovidSOS','covidsos','covidSos'])
+        covid_sos_criterion = FilterCriterion(hashtags=['covidSOS','covidhelp'])
+        covid_resource_criterion = FilterCriterion(hashtags=['covidResource'])
 
         '''
         covid_sos_criterion = FilterCriterion(
@@ -84,7 +85,7 @@ class TwitterFeedService(FeedService):
         covid_resource_criterion = FilterCriterion(hashtags=['Genocide'],
                                                    content_filters=['court'])
         '''
-
+        #covid_tweet_crit  = FilterCriterion(content_filters=['covid','Covid','COVID','CovidSOS'])
         return [covid_sos_criterion,covid_resource_criterion]
 
     def get_recent_tweets(self, duration_in_min: int = 5, count=20):
@@ -120,7 +121,7 @@ class TwitterFeedService(FeedService):
         tweet_id = status._json['id_str']
         tweet_data = status._json['full_text']
         #tweet_time = datetime.datetime.strptime(status._json['created_at'],'%a %b %d %H:%M:%S %z %Y').timestamp()
-        tweet_time = status.created_at
+        tweet_time = str(status.created_at)
         tweet_url = CommonConstants.TWEET_URL + tweet_id
         tweet = Tweet(tweet_data=tweet_data, tweet_url=tweet_url, tweet_time=tweet_time)
         req_service = TweetCovidRequestSevice()

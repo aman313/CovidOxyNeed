@@ -15,10 +15,16 @@ class ResponseCreationService():
     def __init__(self):
         pass
 
+    def save(self, resp:Response):
+        try:
+            resp.save()
+            logging.warn('Saving response: ' + resp.to_json())
+        except Exception as e:
+            logging.error('Error while saving response ' + resp.to_json())
 
     def form_response_message(self, covid_resource:CovidResource, covid_request: CovidRequest)->Response:
-        response_text = covid_resource.resource_type + ' may have been available at ' + covid_resource.resource_time + '. For details check: ' + covid_resource.resource_url
-        response = Response(original_request_id=covid_request.id,original_resource_id=covid_request.id,response_text=response_text)
+        response_text = covid_resource.resource_type + ' may have been available at ' + str(covid_resource.resource_time) + '. For details check: ' + covid_resource.resource_url
+        response = Response(original_request_id=covid_request.id,original_resource_id=covid_resource.id,response_text=response_text)
         response.save()
         return response
 

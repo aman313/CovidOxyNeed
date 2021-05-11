@@ -3,3 +3,6 @@ flask
 mongoengine
 spacy
 geograpy3
+stanza
+fuzzyset
+fuzzysearch
